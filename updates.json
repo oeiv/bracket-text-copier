@@ -1,0 +1,22 @@
+{
+    "addons": {
+        "{b68a8d05-4d2c-473d-829d-487625123456}": {
+            "updates": [
+                {
+                    "version": "1.0.0",
+                    "update_link": "bracket-text-copier.xpi",
+                    "release_date": "Dec 27, 2025",
+                    "notes": [
+                        "Initial public release",
+                        "Core bracket detection engine (Square brackets [])",
+                        "Instant copy to clipboard functionality",
+                        "Visual feedback system (Green flash)",
+                        "Dark mode support for all UI elements",
+                        "Per-site enable/disable toggle",
+                        "Native Firefox UI integration"
+                    ]
+                }
+            ]
+        }
+    }
+}

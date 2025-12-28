@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bracket Text Copier - Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3584e4;
+            --primary-dark: #1c71d8;
+            --bg: #ffffff;
+            --surface: #f8f9fa;
+            --surface-hover: #f0f0f0;
+            --text: #2c3e50;
+            --text-secondary: #5e6c79;
+            --border: #e9ecef;
+            --success: #2ec27e;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: #78aeed;
+                --primary-dark: #3584e4;
+                --bg: #1e1e1e;
+                --surface: #2d2d2d;
+                --surface-hover: #383838;
+                --text: #e0e0e0;
+                --text-secondary: #a0a0a0;
+                --border: #404040;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Gradient Mesh Background */
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80vh;
+            background: radial-gradient(circle at 15% 50%, rgba(53, 132, 228, 0.08) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(46, 194, 126, 0.08) 0%, transparent 25%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .logo svg {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        header {
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(53, 132, 228, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            background: var(--primary-dark);
+            box-shadow: 0 6px 16px rgba(53, 132, 228, 0.4);
+        }
+
+        /* Interactive Demo */
+        .demo-container {
+            margin: 40px auto 80px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 700px;
+            text-align: left;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .browser-chrome {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+
+        .demo-text {
+            font-size: 18px;
+            color: var(--text);
+        }
+
+        .bracket-highlight {
+            color: var(--text);
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            cursor: pointer;
+            background: rgba(53, 132, 228, 0.1);
+            border: 1px dashed rgba(53, 132, 228, 0.3);
+            font-weight: 500;
+        }
+
+        .bracket-highlight:hover {
+            background: rgba(53, 132, 228, 0.2);
+        }
+
+        .bracket-highlight.copied {
+            background: var(--success);
+            color: white;
+            border-color: transparent;
+            animation: flash 2s forwards;
+        }
+
+        @keyframes flash {
+            0% {
+                background: var(--success);
+            }
+
+            50% {
+                background: var(--success);
+            }
+
+            100% {
+                background: transparent;
+                color: var(--text);
+            }
+        }
+
+        /* Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            padding: 32px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        /* Release Info Loop */
+        .releases {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .release-item {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .release-dot {
+            position: absolute;
+            left: -37px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 4px solid var(--bg);
+        }
+
+        .release-version {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .release-date {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: var(--surface);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .release-content {
+            background: var(--surface);
+            padding: 20px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .release-content ul {
+            list-style: none;
+        }
+
+        .release-content li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .release-content li::before {
+            content: '•';
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 0;
+            margin-top: 80px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hero-bg"></div>
+
+    <div class="container">
+        <nav>
+            <a href="#" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 3h5v5M4 20L20.2 3.8M21 16v5h-5M9 21H4v-5M4.93 4.93l6.36 6.36" />
+                </svg>
+                Bracket Text Copier
+            </a>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#releases" class="nav-link">Changelog</a>
+                <a href="https://github.com/yourusername/bracket-text-copier" class="nav-link">GitHub</a>
+            </div>
+        </nav>
+
+        <header>
+            <h1>Copy text inside brackets<br>instantly.</h1>
+            <p class="subtitle">A lightweight Firefox extension that boosts your productivity by making bracketed text
+                copyable with a single click.</p>
+            <a href="#" class="cta-button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v8" />
+                    <path d="M8 12h8" />
+                </svg>
+                Add to Firefox
+            </a>
+        </header>
+
+        <section class="demo-container">
+            <div class="browser-chrome">
+                <div class="dot" style="background: #ff5f56"></div>
+                <div class="dot" style="background: #ffbd2e"></div>
+                <div class="dot" style="background: #27c93f"></div>
+            </div>
+            <div class="demo-text">
+                Try it out right here: <span class="bracket-highlight" onclick="copyDemo(this)">[click to copy this
+                    text]</span> without selecting. It works on <span class="bracket-highlight"
+                    onclick="copyDemo(this)">[code snippets]</span>, <span class="bracket-highlight"
+                    onclick="copyDemo(this)">[IDs]</span>, and more.
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                        <polyline points="13 2 13 9 20 9"></polyline>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Smart Detection</h3>
+                <p class="feature-desc">Automatically identifies text enclosed in square brackets [] across any website
+                    you visit.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Visual Feedback</h3>
+                <p class="feature-desc">Get instant green flash confirmation when you copy. No guessing if it worked.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4"></path>
+                        <path d="M12 8h.01"></path>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Privacy First</h3>
+                <p class="feature-desc">Open source logic that runs entirely on your device. No data is ever sent to
+                    external servers.</p>
+            </div>
+        </section>
+
+        <section id="releases">
+            <div class="section-header">
+                <h2>Release History</h2>
+            </div>
+            <div class="timeline" id="release-timeline">
+                <!-- Loaded dynamically -->
+                <div class="release-item">
+                    <div class="release-content" style="text-align: center; color: var(--text-secondary);">
+                        Loading release history...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2025 Bracket Text Copier. Open Source Software.</p>
+        </footer>
+    </div>
+
+    <script>
+        function copyDemo(element) {
+            element.classList.add('copied');
+            const text = element.innerText.replace('[', '').replace(']', '');
+            navigator.clipboard.writeText(text).then(() => {
+                console.log('Copied:', text);
+            });
+            setTimeout(() => {
+                element.classList.remove('copied');
+            }, 2000);
+        }
+
+        async function loadReleases() {
+            try {
+                const response = await fetch('updates.json');
+                const data = await response.json();
+
+                // Extract updates for our ID
+                const addonId = "{d89408f62ea44d6a249163e18}";
+                const updates = data.addons[addonId]?.updates || [];
+
+                // Sort by version (simple string comparison for now, or assume ordered)
+                updates.reverse();
+
+                const container = document.getElementById('release-timeline');
+                container.innerHTML = '';
+
+                updates.forEach(update => {
+                    const item = document.createElement('div');
+                    item.className = 'release-item';
+
+                    const notesHtml = update.notes
+                        ? `<ul>${update.notes.map(n => `<li>${n}</li>`).join('')}</ul>`
+                        : '';
+
+                    item.innerHTML = `
+                        <div class="release-dot"></div>
+                        <div class="release-version">
+                            v${update.version}
+                            ${update.release_date ? `<span class="release-date">${update.release_date}</span>` : ''}
+                        </div>
+                        <div class="release-content">
+                            ${notesHtml}
+                        </div>
+                    `;
+                    container.appendChild(item);
+
+                    // Also update the main download button to pointing to the latest version
+                    const btn = document.querySelector('.cta-button');
+                    if (btn && update.update_link) {
+                        btn.href = update.update_link;
+                    }
+                });
+
+            } catch (e) {
+                console.error("Failed to load updates:", e);
+                document.getElementById('release-timeline').innerHTML = `
+                    <p style="color: var(--text-secondary)">
+                        Could not load release history. Please check back later.
+                    </p>`;
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadReleases);
+    </script>
+</body>
+
+</html>

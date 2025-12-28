@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bracket Text Copier - Test</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg-color: #fafafa;
+            --window-bg: #ffffff;
+            --card-bg: #ffffff;
+            --headerbar-bg: #ebebeb;
+            --text-color: #1e1e1e;
+            --text-secondary: #5e5e5e;
+            --accent-color: #3584e4;
+            --accent-hover: #1c71d8;
+            --success-color: #2ec27e;
+            --warning-color: #e5a50a;
+            --error-color: #c01c28;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.07), 0 2px 6px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #1e1e1e;
+                --window-bg: #242424;
+                --card-bg: #303030;
+                --headerbar-bg: #303030;
+                --text-color: #ffffff;
+                --text-secondary: #9a9a9a;
+                --border-color: rgba(255, 255, 255, 0.08);
+                --shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Cantarell', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .window {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--window-bg);
+            min-height: 100vh;
+            box-shadow: var(--shadow);
+        }
+
+        .headerbar {
+            background: var(--headerbar-bg);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .headerbar-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .content {
+            padding: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .list-row {
+            padding: 14px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            transition: background 0.15s;
+        }
+
+        .list-row:first-child {
+            border-top: none;
+        }
+
+        .list-row:hover {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .list-row:hover {
+                background: rgba(255, 255, 255, 0.03);
+            }
+        }
+
+        .list-row-content {
+            flex: 1;
+        }
+
+        .list-row-title {
+            font-size: 15px;
+            color: var(--text-color);
+        }
+
+        .list-row-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .banner {
+            background: rgba(53, 132, 228, 0.1);
+            border: 1px solid rgba(53, 132, 228, 0.2);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+
+        .banner-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .banner ol {
+            margin: 0;
+            padding-left: 20px;
+            color: var(--text-color);
+            font-size: 14px;
+        }
+
+        .banner li {
+            margin: 6px 0;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 13px;
+            background: rgba(0, 0, 0, 0.06);
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            code {
+                background: rgba(255, 255, 255, 0.08);
+            }
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .check-list {
+            list-style: none;
+        }
+
+        .check-item {
+            padding: 12px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .check-item:first-child {
+            border-top: none;
+        }
+
+        .check-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--success-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dark-section {
+            background: #1e1e1e;
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            margin: 0 20px 20px;
+        }
+
+        .dark-section .list-row-title {
+            color: #ffffff;
+        }
+
+        .dark-section .list-row-subtitle {
+            color: #9a9a9a;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Icons */
+        .icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .icon-lg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .icon svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+
+        .icon-accent {
+            color: var(--accent-color);
+        }
+
+        .icon-success {
+            color: var(--success-color);
+        }
+
+        .icon-warning {
+            color: var(--warning-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="window">
+        <!-- Headerbar -->
+        <div class="headerbar">
+            <span class="icon icon-accent">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z" />
+                </svg>
+            </span>
+            <span class="headerbar-title">Bracket Text Copier — Test Page</span>
+        </div>
+
+        <div class="content">
+            <!-- Instructions Banner -->
+            <div class="banner">
+                <div class="banner-title">
+                    <span class="icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+                        </svg>
+                    </span>
+                    How to Test
+                </div>
+                <ol>
+                    <li>Click on any <code>[bracketed text]</code> below</li>
+                    <li>You should see a toast notification</li>
+                    <li>The text will flash green</li>
+                    <li>Press <code>Ctrl+V</code> to paste and verify</li>
+                </ol>
+            </div>
+
+            <!-- Basic Tests -->
+            <div class="section-title">
+                <span class="icon icon-lg icon-accent">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                    </svg>
+                </span>
+                Basic Tests
+            </div>
+            <div class="card">
+                <div class="list-row">
+                    <div class="list-row-content">
+                        <div class="list-row-title">Simple text: [hello world]</div>
+                        <div class="list-row-subtitle">Should copy "hello world"</div>
+                    </div>
+                </div>
+                <div class="list-row">
+                    <div class="list-row-content">
+                        <div class="list-row-title">Single word: [test]</div>
+                        <div class="list-row-subtitle">Should copy "test"</div>
+                    </div>
+                </div>
+                <div class="list-row">
+                    <div class="list-row-content">
+                        <div class="list-row-title">Numbers: [12345]</div>
+                        <div class="list-row-subtitle">Should copy "12345"</div>
+                    </div>
+                </div>
+                <div class="list-row">
+                    <div class="list-row-content">
+                        <div class="list-row-title">Email: [user@example.com]</div>
+                        <div class="list-row-subtitle">Should copy email address</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Special Characters -->
+            <div class="section-title">
+                <span class="icon icon-lg icon-accent">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M2.5 4v3h5v12h3V7h5V4h-13zm19 5h-9v3h3v7h3v-7h3V9z" />
+                    </svg>
+                </span>
+                Special Characters
+            </div>
+            <div class="card">
+                <div class="list-row">
+                    <div class="list-row-content">
+                        <div class="list-row-title">Unicode Arabic: [مرحبا بالعالم]</div>
+                    </div>
+                </div>
+                <div class="list-row">
+                    <div class="list-row-content">
+                        <div class="list-row-title">With Symbols: [Hello @ World #1]</div>
+                    </div>
+                </div>
+                <div class="list-row">
+                    <div class="list-row-content">
+                        <div class="list-row-title">Punctuation: [Hello, World!]</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inline Tests -->
+            <div class="section-title">
+                <span class="icon icon-lg icon-accent">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                    </svg>
+                </span>
+                Inline Tests
+            </div>
+            <div class="card">
+                <div class="list-row">
+                    <div class="list-row-content">
+                        <div class="list-row-title">
+                            This paragraph has [inline brackets] that should work.
+                        </div>
+                    </div>
+                </div>
+                <div class="list-row">
+                    <div class="list-row-content">
+                        <div class="list-row-title">
+                            Multiple: [first] and [second] and [third] in one line.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Examples -->
+            <div class="section-title">
+                <span class="icon icon-lg icon-accent">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" />
+                    </svg>
+                </span>
+                Code Examples
+            </div>
+            <div class="card">
+                <div class="list-row">
+                    <div class="list-row-content">
+                        <div class="list-row-title">[npm install package-name]</div>
+                        <div class="list-row-subtitle">Command</div>
+                    </div>
+                </div>
+                <div class="list-row">
+                    <div class="list-row-content">
+                        <div class="list-row-title">[const value = "hello"]</div>
+                        <div class="list-row-subtitle">JavaScript</div>
+                    </div>
+                </div>
+                <div class="list-row">
+                    <div class="list-row-content">
+                        <div class="list-row-title">[/home/user/file.txt]</div>
+                        <div class="list-row-subtitle">File path</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expected Behavior -->
+            <div class="section-title">
+                <span class="icon icon-lg icon-success">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                    </svg>
+                </span>
+                Expected Behavior
+            </div>
+            <div class="card">
+                <ul class="check-list">
+                    <li class="check-item">
+                        <span class="check-icon">
+                            <svg viewBox="0 0 24 24" width="12" height="12" fill="white">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                        </span>
+                        Yellow highlight on hover
+                    </li>
+
+                    <li class="check-item">
+                        <span class="check-icon">
+                            <svg viewBox="0 0 24 24" width="12" height="12" fill="white">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                        </span>
+                        Click copies text without brackets
+                    </li>
+                    <li class="check-item">
+                        <span class="check-icon">
+                            <svg viewBox="0 0 24 24" width="12" height="12" fill="white">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                        </span>
+                        Green background flash after copy
+                    </li>
+                    <li class="check-item">
+                        <span class="check-icon">
+                            <svg viewBox="0 0 24 24" width="12" height="12" fill="white">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                        </span>
+                        Toast notification appears
+                    </li>
+                    <li class="check-item">
+                        <span class="check-icon">
+                            <svg viewBox="0 0 24 24" width="12" height="12" fill="white">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                        </span>
+                        Highlight fades after 2 seconds
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Bracket Text Copier v1.0.0
+        </div>
+    </div>
+</body>
+
+</html>
