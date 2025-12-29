@@ -37,3 +37,15 @@ Edit `updates.json` in the root to add new release information. The website fetc
 ## Website
 
 Live at: https://oeiv.github.io/bracket-text-copier/
+
+## Build
+
+To create the distribution files (`.zip` and `.xpi`), run:
+
+```bash
+# Create ZIP (explicit file list)
+zip -r bracket-text-copier-1.0.0.zip manifest.json background.js content.js popup.html popup.js styles.css icons/ src/
+
+# Create XPI (Firefox)
+cp bracket-text-copier-1.0.0.zip bracket-text-copier-1.0.0.xpi
+```
