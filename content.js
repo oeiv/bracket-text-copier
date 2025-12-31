@@ -7,7 +7,7 @@
 
 const App = {
   enabled: true,
-  currentHost: window.location.hostname,
+  currentHost: window.location.hostname.replace(/^www\./, ''),
 
   async init() {
     Logger.log('Initializing...');

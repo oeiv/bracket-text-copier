@@ -14,7 +14,7 @@ async function initialize() {
   try {
     const tabs = await browser.tabs.query({ active: true, currentWindow: true });
     currentTab = tabs[0];
-    currentHost = new URL(currentTab.url).hostname;
+    currentHost = new URL(currentTab.url).hostname.replace(/^www\./, '');
 
     document.getElementById('currentSite').textContent = currentHost || 'N/A';
 
