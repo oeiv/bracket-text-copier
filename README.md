@@ -11,6 +11,9 @@ Click on `[bracketed text]` to copy it instantly.
 
 ## Install
 
+**[Download from Firefox Add-ons](https://addons.mozilla.org/addon/bracket-text-copier/)**
+
+Or load manually:
 1. Firefox → `about:debugging`
 2. Click "Load Temporary Add-on"
 3. Select `manifest.json`
