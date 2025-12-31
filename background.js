@@ -1,6 +1,6 @@
 /**
- * Bracket Text Copier Pro - Background Script
- * @version 2.2.0
+ * Bracket Text Copier - Background Script
+ * @version 1.0.1
  */
 
 'use strict';

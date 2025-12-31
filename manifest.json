@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Bracket Text Copier",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Click on [bracketed text] to copy it instantly",
   "permissions": [
     "activeTab",

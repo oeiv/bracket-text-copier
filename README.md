@@ -47,8 +47,8 @@ To create the distribution files (`.zip` and `.xpi`), run:
 
 ```bash
 # Create ZIP (explicit file list)
-zip -r bracket-text-copier-1.0.0.zip manifest.json background.js content.js popup.html popup.js styles.css icons/ src/
+zip -r bracket-text-copier-1.0.1.zip manifest.json background.js content.js popup.html popup.js styles.css icons/ src/
 
 # Create XPI (Firefox)
-cp bracket-text-copier-1.0.0.zip bracket-text-copier-1.0.0.xpi
+cp bracket-text-copier-1.0.1.zip bracket-text-copier-1.0.1.xpi
 ```

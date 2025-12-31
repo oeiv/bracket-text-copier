@@ -1,6 +1,6 @@
 /**
  * Bracket Text Copier - Main Entry Point
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 'use strict';
