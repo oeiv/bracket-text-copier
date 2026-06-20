@@ -1,7 +1,24 @@
 {
     "addons": {
-        "{b68a8d05-4d2c-473d-829d-487625123456}": {
+        "{a7f3c2e8-91d4-4b6a-8e5f-3c9d7a2b1e0f}": {
             "updates": [
+                {
+                    "version": "1.0.2",
+                    "update_link": "bracket-text-copier.xpi",
+                    "release_date": "Jun 20, 2026",
+                    "notes": [
+                        "Performance: MutationObserver now batches DOM mutations into a single animation frame, preventing processing storms on heavy SPAs like Twitter and Gmail",
+                        "Performance: Visual feedback now uses CSS class toggling instead of inline styles for faster rendering",
+                        "Fix: Replaced shared stateful regex with a local instance per call, eliminating potential match-skipping bugs",
+                        "Fix: Popup toggle is now disabled during async initialization to prevent race condition when currentTab/currentHost are not yet set",
+                        "Fix: Toast and Feedback timers are now properly cancelled on hide/clear, eliminating timer leaks",
+                        "Fix: Corrected addon ID in updates.json to match manifest.json — automatic update checks were broken in previous versions",
+                        "Fix: cleanup() now calls normalize() to merge adjacent text nodes left behind after removing bracket wrappers",
+                        "Fix: stop() now also clears active Toast and Feedback states when the extension is disabled on a site",
+                        "Fix: Added NOSCRIPT and TEXTAREA to the list of excluded elements during bracket scanning",
+                        "Compatibility: Lowered minimum Firefox version requirement from 142.0 to 109.0"
+                    ]
+                },
                 {
                     "version": "1.0.1",
                     "update_link": "bracket-text-copier.xpi",

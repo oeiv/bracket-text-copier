@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Bracket Text Copier",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Click on [bracketed text] to copy it instantly",
   "permissions": [
     "activeTab",
@@ -10,7 +10,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{a7f3c2e8-91d4-4b6a-8e5f-3c9d7a2b1e0f}",
-      "strict_min_version": "142.0",
+      "strict_min_version": "109.0",
       "data_collection_permissions": {
         "required": [
           "none"

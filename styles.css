@@ -1,63 +1,73 @@
 /**
  * Bracket Text Copier - Content Styles
- * @version 1.0.0
- * Uses Firefox CSS variables for dark mode support
+ * @version 1.0.2
  */
 
-/* Bracket wrapper */
 .bracket-text-wrapper {
-  cursor: pointer;
-  background-color: rgba(255, 235, 59, 0.3);
-  padding: 2px 4px;
-  border-radius: 3px;
-  transition: all 0.2s ease;
-  display: inline;
-  border: 1px solid transparent;
+    cursor: pointer;
+    background-color: rgba(255, 235, 59, 0.3);
+    padding: 2px 4px;
+    border-radius: 3px;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+    display: inline;
+    border: 1px solid transparent;
 }
 
 .bracket-text-wrapper:hover {
-  background-color: rgba(255, 235, 59, 0.6);
-  border-color: rgba(255, 235, 59, 0.8);
+    background-color: rgba(255, 235, 59, 0.6);
+    border-color: rgba(255, 235, 59, 0.8);
+}
+
+/* Feedback state — applied via JS class, not inline styles, for better performance */
+.bracket-text-wrapper.bracket-text-copied {
+    background-color: rgba(76, 175, 80, 0.75);
+    border-color: rgba(76, 175, 80, 0.9);
+    color: #fff;
+    transition: background-color 0.1s ease;
 }
 
 /* Toast notification */
 .bracket-text-toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: #2e2e2e;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-family: system-ui, -apple-system, sans-serif;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  z-index: 2147483647;
-  opacity: 0;
-  transition: all 0.3s ease;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #2e2e2e;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: system-ui, -apple-system, sans-serif;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 2147483647;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
 }
 
 .bracket-text-toast.show {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
 }
 
 .bracket-text-toast.success {
-  background: #2ac3a2;
+    background: #2ac3a2;
 }
 
 .bracket-text-toast.info {
-  background: #0a84ff;
+    background: #0a84ff;
 }
 
-/* Dark mode support */
 @media (prefers-color-scheme: dark) {
-  .bracket-text-wrapper {
-    background-color: rgba(255, 235, 59, 0.2);
-  }
+    .bracket-text-wrapper {
+        background-color: rgba(255, 235, 59, 0.2);
+    }
 
-  .bracket-text-wrapper:hover {
-    background-color: rgba(255, 235, 59, 0.4);
-  }
+    .bracket-text-wrapper:hover {
+        background-color: rgba(255, 235, 59, 0.35);
+    }
+
+    .bracket-text-wrapper.bracket-text-copied {
+        background-color: rgba(76, 175, 80, 0.6);
+    }
 }

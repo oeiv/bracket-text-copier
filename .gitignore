@@ -1,2 +1,16 @@
-bracket-text-copier-1.0.0.zip
-bracket-text-copier-1.0.0.xpi
+# Build artifacts
+*.zip
+*.xpi
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log

@@ -6,36 +6,21 @@
 'use strict';
 
 const Feedback = {
+    cssClass: 'bracket-text-copied',
     lastElement: null,
-    timeout: 2000,
+    _timer: null,
 
-    /**
-     * Apply visual feedback - change background color
-     * @param {Element} element
-     */
     apply(element) {
         this.clear();
-
-        element.style.transition = 'background-color 0.2s ease';
-        element.style.backgroundColor = '#4caf50';
-        element.style.color = '#fff';
-
+        element.classList.add(this.cssClass);
         this.lastElement = element;
-
-        setTimeout(() => {
-            if (this.lastElement === element) {
-                this.clear();
-            }
-        }, this.timeout);
+        this._timer = setTimeout(() => this.clear(), 300_000);
     },
 
-    /**
-     * Clear visual feedback
-     */
     clear() {
+        clearTimeout(this._timer);
         if (this.lastElement) {
-            this.lastElement.style.backgroundColor = '';
-            this.lastElement.style.color = '';
+            this.lastElement.classList.remove(this.cssClass);
             this.lastElement = null;
         }
     }

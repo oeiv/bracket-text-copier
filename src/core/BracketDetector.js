@@ -7,32 +7,25 @@
 
 const BracketDetector = {
     wrapperClass: 'bracket-text-wrapper',
-    regex: /\[([^\]]+)\]/g,
     observer: null,
+    _pendingNodes: [],
+    _rafId: null,
+    onClick: null,
 
-    /**
-     * Initialize bracket detection on element
-     * @param {Element} root - Root element to scan
-     * @param {Function} onClick - Click handler for brackets
-     */
     init(root, onClick) {
         this.onClick = onClick;
         this.processElement(root);
         this.observe(root);
     },
 
-    /**
-     * Process element for bracketed text
-     * @param {Element} element - Element to process
-     */
     processElement(element) {
         const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
             acceptNode: (node) => {
-                if (node.parentElement?.classList.contains(this.wrapperClass)) {
+                const tag = node.parentElement?.tagName;
+                if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT' || tag === 'TEXTAREA') {
                     return NodeFilter.FILTER_REJECT;
                 }
-                const tag = node.parentElement?.tagName;
-                if (tag === 'SCRIPT' || tag === 'STYLE') {
+                if (node.parentElement?.classList.contains(this.wrapperClass)) {
                     return NodeFilter.FILTER_REJECT;
                 }
                 return NodeFilter.FILTER_ACCEPT;
@@ -41,24 +34,21 @@ const BracketDetector = {
 
         const textNodes = [];
         while (walker.nextNode()) textNodes.push(walker.currentNode);
-
         textNodes.forEach(node => this.wrapBrackets(node));
     },
 
-    /**
-     * Wrap bracketed text in clickable spans
-     * @param {Text} node - Text node to process
-     */
     wrapBrackets(node) {
         const text = node.textContent;
-        if (!this.regex.test(text)) return;
+        // Use a local regex to avoid stateful lastIndex bugs on the shared instance
+        const regex = /\[([^\]]+)\]/g;
+        if (!regex.test(text)) return;
 
         const fragment = document.createDocumentFragment();
         let lastIndex = 0;
         let match;
 
-        this.regex.lastIndex = 0;
-        while ((match = this.regex.exec(text)) !== null) {
+        regex.lastIndex = 0;
+        while ((match = regex.exec(text)) !== null) {
             if (match.index > lastIndex) {
                 fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
             }
@@ -80,38 +70,64 @@ const BracketDetector = {
         node.parentNode.replaceChild(fragment, node);
     },
 
-    /**
-     * Observe DOM for new content
-     * @param {Element} root - Root element to observe
-     */
     observe(root) {
         this.observer = new MutationObserver(mutations => {
             for (const mutation of mutations) {
                 for (const node of mutation.addedNodes) {
                     if (node.nodeType === Node.ELEMENT_NODE) {
-                        this.processElement(node);
+                        this._pendingNodes.push(node);
+                    } else if (
+                        node.nodeType === Node.TEXT_NODE &&
+                        node.parentElement &&
+                        !node.parentElement.classList.contains(this.wrapperClass)
+                    ) {
+                        this._pendingNodes.push(node);
                     }
                 }
             }
+            this._scheduleBatch();
         });
 
         this.observer.observe(root, { childList: true, subtree: true });
     },
 
-    /**
-     * Cleanup - remove wrappers and disconnect observer
-     */
-    cleanup() {
-        document.querySelectorAll(`.${this.wrapperClass}`).forEach(span => {
-            const parent = span.parentNode;
-            if (parent) {
-                parent.replaceChild(document.createTextNode(span.textContent), span);
+    // Batch all mutations into a single rAF tick to avoid processing storms on heavy SPAs
+    _scheduleBatch() {
+        if (this._rafId !== null) return;
+        this._rafId = requestAnimationFrame(() => {
+            this._rafId = null;
+            const nodes = this._pendingNodes.splice(0);
+            for (const node of nodes) {
+                if (!document.contains(node)) continue;
+                if (node.nodeType === Node.TEXT_NODE) {
+                    this.wrapBrackets(node);
+                } else {
+                    this.processElement(node);
+                }
             }
         });
+    },
 
+    cleanup() {
         if (this.observer) {
             this.observer.disconnect();
             this.observer = null;
         }
+        if (this._rafId !== null) {
+            cancelAnimationFrame(this._rafId);
+            this._rafId = null;
+        }
+        this._pendingNodes = [];
+
+        const parents = new Set();
+        document.querySelectorAll(`.${this.wrapperClass}`).forEach(span => {
+            const parent = span.parentNode;
+            if (parent) {
+                parent.replaceChild(document.createTextNode(span.textContent), span);
+                parents.add(parent);
+            }
+        });
+        // Merge adjacent text nodes left behind after unwrapping
+        parents.forEach(p => p.normalize());
     }
 };
