@@ -32,7 +32,7 @@ async function loadReleases() {
         const data = await response.json();
 
         // Extract updates for our addon ID
-        const addonId = "{b68a8d05-4d2c-473d-829d-487625123456}";
+        const addonId = "{a7f3c2e8-91d4-4b6a-8e5f-3c9d7a2b1e0f}";
         const updates = data.addons[addonId]?.updates || [];
 
         // Sort by version (reverse to show newest first)
@@ -52,11 +52,6 @@ async function loadReleases() {
             latestVersionEl.textContent = updates[0].version;
         }
 
-        // Update install button link to latest release
-        if (installBtn && updates[0]?.update_link) {
-            installBtn.href = updates[0].update_link;
-        }
-
         // Clear loading message
         container.innerHTML = '';
 
@@ -65,25 +60,47 @@ async function loadReleases() {
             const item = document.createElement('div');
             item.className = 'release-item';
 
-            const notesHtml = update.notes && update.notes.length > 0
-                ? `<ul>${update.notes.map(note => `<li>${note}</li>`).join('')}</ul>`
-                : '<p>No release notes available.</p>';
+            const dot = document.createElement('div');
+            dot.className = 'release-dot';
 
-            const isLatest = index === 0;
-            const latestBadge = isLatest ? '<span class="latest-badge">Latest</span>' : '';
+            const versionEl = document.createElement('div');
+            versionEl.className = 'release-version';
+            versionEl.appendChild(document.createTextNode(`v${update.version} `));
 
-            item.innerHTML = `
-                <div class="release-dot"></div>
-                <div class="release-version">
-                    v${update.version}
-                    ${latestBadge}
-                    ${update.release_date ? `<span class="release-date">${update.release_date}</span>` : ''}
-                </div>
-                <div class="release-content">
-                    ${notesHtml}
-                </div>
-            `;
+            if (index === 0) {
+                const badge = document.createElement('span');
+                badge.className = 'latest-badge';
+                badge.textContent = 'Latest';
+                versionEl.appendChild(badge);
+            }
 
+            if (update.release_date) {
+                const dateEl = document.createElement('span');
+                dateEl.className = 'release-date';
+                dateEl.textContent = update.release_date;
+                versionEl.appendChild(dateEl);
+            }
+
+            const content = document.createElement('div');
+            content.className = 'release-content';
+
+            if (update.notes && update.notes.length > 0) {
+                const ul = document.createElement('ul');
+                update.notes.forEach(note => {
+                    const li = document.createElement('li');
+                    li.textContent = note;
+                    ul.appendChild(li);
+                });
+                content.appendChild(ul);
+            } else {
+                const p = document.createElement('p');
+                p.textContent = 'No release notes available.';
+                content.appendChild(p);
+            }
+
+            item.appendChild(dot);
+            item.appendChild(versionEl);
+            item.appendChild(content);
             container.appendChild(item);
         });
 
@@ -184,17 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     stats.forEach(stat => {
         statsObserver.observe(stat);
-    });
-
-    // Add hover effect to feature cards
-    document.querySelectorAll('.feature-card').forEach(card => {
-        card.addEventListener('mouseenter', function () {
-            this.style.transform = 'translateY(-8px) scale(1.02)';
-        });
-
-        card.addEventListener('mouseleave', function () {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
     });
 
     // Detect if user is on Firefox
